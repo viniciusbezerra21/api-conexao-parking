@@ -9,5 +9,4 @@ public class ApiConexaoParkingApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApiConexaoParkingApplication.class, args);
 	}
-
 }
