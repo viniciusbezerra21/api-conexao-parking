@@ -3,10 +3,7 @@ package conexao_parking.api.cadastro;
 import conexao_parking.api.usuario.Usuario;
 import conexao_parking.api.veiculo.Veiculo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "cadastro")
@@ -23,5 +20,12 @@ public class Cadastro {
     @ManyToOne
     @JoinColumn(name = "id_veiculo")
     private Veiculo veiculo;
+
+    protected Cadastro() {}
+
+    public Cadastro(Usuario usuario, Veiculo veiculo) {
+        this.usuario = usuario;
+        this.veiculo = veiculo;
+    }
 
 }
