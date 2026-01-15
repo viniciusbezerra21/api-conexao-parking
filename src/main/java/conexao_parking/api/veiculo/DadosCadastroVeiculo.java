@@ -2,6 +2,7 @@ package conexao_parking.api.veiculo;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 public record DadosCadastroVeiculo(
         @NotNull
@@ -13,6 +14,8 @@ public record DadosCadastroVeiculo(
         @NotNull
         Boolean visitante,
         @NotNull
-        TipoVeiculo tipo_veiculo
+        TipoVeiculo tipo_veiculo,
+
+        StatusVeiculo status
 ) {
 }

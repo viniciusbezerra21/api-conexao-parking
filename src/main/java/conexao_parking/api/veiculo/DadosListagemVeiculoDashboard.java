@@ -5,7 +5,8 @@ public record DadosListagemVeiculoDashboard(
         String cpf_proprietario,
         TipoVeiculo tipo_veiculo,
         String numero_placa,
-        String cor
+        String cor,
+        StatusVeiculo status
 
 ) {
     public DadosListagemVeiculoDashboard(Veiculo veiculo) {
@@ -14,9 +15,8 @@ public record DadosListagemVeiculoDashboard(
                 veiculo.getProprietario().getCpf_proprietario(),
                 veiculo.getTipo_veiculo(),
                 veiculo.getNumero_placa(),
-                veiculo.getCor()
-
-
+                veiculo.getCor(),
+                veiculo.getStatus()
         );
     }
 }

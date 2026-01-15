@@ -1,2 +1,0 @@
-ALTER TABLE status
-    MODIFY COLUMN id_veiculo INT NOT NULL;

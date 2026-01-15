@@ -27,6 +27,8 @@ public class Veiculo {
     private Boolean visitante;
 
     @Enumerated(EnumType.STRING)
+    private StatusVeiculo status;
+    @Enumerated(EnumType.STRING)
     private TipoVeiculo tipo_veiculo;
 
     public Veiculo(DadosCadastroVeiculo dados, Proprietario proprietario) {
@@ -35,5 +37,6 @@ public class Veiculo {
         this.visitante = dados.visitante();
         this.tipo_veiculo = dados.tipo_veiculo();
         this.proprietario =  proprietario;
+        this.status = dados.status();
     }
 }

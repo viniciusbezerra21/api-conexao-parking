@@ -33,7 +33,5 @@ public class VeiculoController {
         return repository.findAll(paginacao).map(DadosListagemVeiculoDashboard::new);
     }
 
-
-
 }
 
