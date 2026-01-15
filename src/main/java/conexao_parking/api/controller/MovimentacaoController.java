@@ -5,10 +5,7 @@ import conexao_parking.api.movimentacao.MoviementacaoService;
 import conexao_parking.api.movimentacao.Movimentacao;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("movimentacao")
@@ -25,5 +22,7 @@ public class MovimentacaoController {
     public void Cadastrar(@RequestBody @Valid DadosCadastroMovimentacao dados) {
         service.cadastrar(dados);
     }
+
+
 
 }
