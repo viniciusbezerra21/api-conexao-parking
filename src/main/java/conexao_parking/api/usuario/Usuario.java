@@ -1,6 +1,7 @@
 package conexao_parking.api.usuario;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,6 +23,15 @@ public class Usuario {
     public Usuario(DadosCadastroUsuario dados) {
         this.email_corporativo = dados.email_corporativo();
         this.senha = dados.senha();
+    }
+
+    public void atualizarInformacoes(@Valid DadosAtualizacaoUsuario dados) {
+        if (dados.email_corporativo() != null) {
+            this.email_corporativo = dados.email_corporativo();
+        }
+        if (dados.senha() != null) {
+            this.senha = dados.senha();
+        }
     }
 }
 

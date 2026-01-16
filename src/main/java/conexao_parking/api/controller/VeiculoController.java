@@ -33,5 +33,12 @@ public class VeiculoController {
         return repository.findAll(paginacao).map(DadosListagemVeiculoDashboard::new);
     }
 
+    @PutMapping
+    @Transactional
+    public void atualizar(@RequestBody @Valid DadosAtualizacaoVeiculo dados) {
+        var veiculo = repository.getReferenceById(dados.id_veiculo());
+        veiculo.atualizarInformacoes(dados);
+    }
+
 }
 

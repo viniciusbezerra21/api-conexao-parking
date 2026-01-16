@@ -2,6 +2,7 @@ package conexao_parking.api.veiculo;
 
 import conexao_parking.api.proprietario.Proprietario;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -38,5 +39,20 @@ public class Veiculo {
         this.tipo_veiculo = dados.tipo_veiculo();
         this.proprietario =  proprietario;
         this.status = dados.status();
+    }
+
+    public void atualizarInformacoes(@Valid DadosAtualizacaoVeiculo dados) {
+        if (dados.numero_placa() != null) {
+           this.numero_placa = dados.numero_placa();
+        }
+        if (dados.tipo_veiculo() != null) {
+            this.tipo_veiculo = dados.tipo_veiculo();
+        }
+        if (dados.status() != null) {
+            this.status = dados.status();
+        }
+        if (dados.cor() != null) {
+            this.cor = dados.cor();
+        }
     }
 }
