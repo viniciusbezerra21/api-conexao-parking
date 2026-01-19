@@ -1,9 +1,6 @@
 package conexao_parking.api.controller;
 
-import conexao_parking.api.usuario.DadosAtualizacaoUsuario;
-import conexao_parking.api.usuario.DadosCadastroUsuario;
-import conexao_parking.api.usuario.Usuario;
-import conexao_parking.api.usuario.UsuarioRepository;
+import conexao_parking.api.usuario.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +24,12 @@ public class UsuarioController {
     public void atualizar(@RequestBody @Valid DadosAtualizacaoUsuario dados) {
         var usuario = repository.getReferenceById(dados.id_usuario());
         usuario.atualizarInformacoes(dados);
+    }
+
+    @DeleteMapping
+    @Transactional
+    public void deletar(@RequestBody @Valid DadosExclusaoUsuario dados) {
+        var usuario = repository.getReferenceById(dados.id_usuario());
+        usuario.deletar(dados);
     }
 }

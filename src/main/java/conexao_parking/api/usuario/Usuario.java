@@ -33,5 +33,11 @@ public class Usuario {
             this.senha = dados.senha();
         }
     }
+
+    public void deletar(@Valid DadosExclusaoUsuario dados) {
+        if (dados.email_corporativo() != null) {
+            this.email_corporativo = dados.email_corporativo();
+        }
+    }
 }
 

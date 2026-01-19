@@ -1,5 +1,6 @@
 package conexao_parking.api.veiculo;
 
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -13,9 +14,11 @@ public record DadosCadastroVeiculo(
         String cor,
         @NotNull
         Boolean visitante,
-        @NotNull
+        @NotBlank
+        @Enumerated
         TipoVeiculo tipo_veiculo,
-
+        @NotBlank
+        @Enumerated
         StatusVeiculo status
 ) {
 }
