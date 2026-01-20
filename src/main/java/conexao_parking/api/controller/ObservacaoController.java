@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,7 +27,8 @@ public class ObservacaoController {
     }
 
     @GetMapping
-    public Page<DadosListagemObservacao> listar(@PageableDefault(size = 10)Pageable paginacao) {
-        return repository.findAll(paginacao).map(DadosListagemObservacao::new);
+    public ResponseEntity<Page<DadosListagemObservacao>> listar(@PageableDefault(size = 10)Pageable paginacao) {
+        var page = repository.findAll(paginacao).map(DadosListagemObservacao::new);
+        return ResponseEntity.ok(page);
     }
 }

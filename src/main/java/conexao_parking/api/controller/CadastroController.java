@@ -1,7 +1,9 @@
 package conexao_parking.api.controller;
 
+import conexao_parking.api.cadastro.CadastroRepository;
 import conexao_parking.api.cadastro.CadastroRequestDTO;
 import conexao_parking.api.cadastro.CadastroService;
+
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("cadastro")
 public class CadastroController {
+
+    private CadastroRepository repository;
 
     private final CadastroService cadastroService;
 
@@ -24,4 +28,5 @@ public class CadastroController {
         cadastroService.cadastrar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
 }
