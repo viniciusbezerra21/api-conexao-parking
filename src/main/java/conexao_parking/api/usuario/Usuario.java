@@ -17,12 +17,16 @@ public class Usuario {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id_usuario;
+
     private String email_corporativo;
     private String senha;
+
+    private Boolean ativo;
 
     public Usuario(DadosCadastroUsuario dados) {
         this.email_corporativo = dados.email_corporativo();
         this.senha = dados.senha();
+        this.ativo = true;
     }
 
     public void atualizarInformacoes(@Valid DadosAtualizacaoUsuario dados) {
@@ -34,10 +38,9 @@ public class Usuario {
         }
     }
 
-    public void deletar(@Valid DadosExclusaoUsuario dados) {
-        if (dados.email_corporativo() != null) {
-            this.email_corporativo = dados.email_corporativo();
-        }
+
+    public void excluir() {
+        this.ativo = false;
     }
 }
 

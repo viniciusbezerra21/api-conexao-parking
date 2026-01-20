@@ -4,6 +4,9 @@ import conexao_parking.api.usuario.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +22,11 @@ public class UsuarioController {
     repository.save(new Usuario(usuario));
     }
 
+    @GetMapping
+    public Page<DadosListagemUsuario> listar(@PageableDefault(size = 10)Pageable paginacao) {
+        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemUsuario::new);
+    }
+
     @PutMapping
     @Transactional
     public void atualizar(@RequestBody @Valid DadosAtualizacaoUsuario dados) {
@@ -26,10 +34,11 @@ public class UsuarioController {
         usuario.atualizarInformacoes(dados);
     }
 
-    @DeleteMapping
+    @DeleteMapping({"/{id}"})
     @Transactional
-    public void deletar(@RequestBody @Valid DadosExclusaoUsuario dados) {
-        var usuario = repository.getReferenceById(dados.id_usuario());
-        usuario.deletar(dados);
+    public void excluir(@PathVariable Long id) {
+        var usuario = repository.getReferenceById(id);
+        usuario.excluir();
     }
+
 }
