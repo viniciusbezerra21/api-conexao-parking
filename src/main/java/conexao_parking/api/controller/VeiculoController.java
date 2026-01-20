@@ -30,7 +30,7 @@ public class VeiculoController {
 
     @GetMapping
     public Page<DadosListagemVeiculoDashboard> listagemDashboard(@PageableDefault(size = 10, sort = {"proprietario.nome"})Pageable paginacao) {
-        return repository.findAll(paginacao).map(DadosListagemVeiculoDashboard::new);
+        return repository.findByExcluidoFalse(paginacao).map(DadosListagemVeiculoDashboard::new);
     }
 
     @PutMapping
@@ -40,5 +40,11 @@ public class VeiculoController {
         veiculo.atualizarInformacoes(dados);
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void excluir(@PathVariable Long id) {
+        var veiculo = repository.getReferenceById(id);
+        veiculo.excluir();
+    }
 }
 

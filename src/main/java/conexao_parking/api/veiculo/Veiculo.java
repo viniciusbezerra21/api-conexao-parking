@@ -32,6 +32,8 @@ public class Veiculo {
     @Enumerated(EnumType.STRING)
     private TipoVeiculo tipo_veiculo;
 
+    private Boolean excluido;
+
     public Veiculo(DadosCadastroVeiculo dados, Proprietario proprietario) {
         this.cor = dados.cor();
         this.numero_placa = dados.numero_placa();
@@ -39,6 +41,7 @@ public class Veiculo {
         this.tipo_veiculo = dados.tipo_veiculo();
         this.proprietario =  proprietario;
         this.status = dados.status();
+        this.excluido = false;
     }
 
     public void atualizarInformacoes(@Valid DadosAtualizacaoVeiculo dados) {
@@ -54,5 +57,9 @@ public class Veiculo {
         if (dados.cor() != null) {
             this.cor = dados.cor();
         }
+    }
+
+    public void excluir() {
+        this.excluido = true;
     }
 }
