@@ -4,14 +4,19 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 
 public record DadosAtualizacaoVeiculo(
-
-      @NotNull
       long id_veiculo,
       String numero_placa,
-      @Enumerated
       TipoVeiculo tipo_veiculo,
-      @Enumerated
       StatusVeiculo status,
       String cor
 ) {
+      public DadosAtualizacaoVeiculo (Veiculo veiculo) {
+            this(
+                    veiculo.getId_veiculo(),
+                    veiculo.getNumero_placa(),
+                    veiculo.getTipo_veiculo(),
+                    veiculo.getStatus(),
+                    veiculo.getCor()
+            );
+      }
 }

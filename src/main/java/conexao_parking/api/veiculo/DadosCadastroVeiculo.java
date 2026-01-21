@@ -14,10 +14,8 @@ public record DadosCadastroVeiculo(
         String cor,
         @NotNull
         Boolean visitante,
-        @NotBlank
         @Enumerated
         TipoVeiculo tipo_veiculo,
-        @NotBlank
         @Enumerated
         StatusVeiculo status
 ) {

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("usuario")
@@ -19,8 +20,13 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
-    public void cadastrar(@RequestBody @Valid DadosCadastroUsuario usuario) {
-    repository.save(new Usuario(usuario));
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {
+    Usuario usuario = new Usuario(dados);
+    repository.save(usuario);
+
+    var uri = uriBuilder.path("/usuario/{id}").buildAndExpand(usuario.getId_usuario()).toUri();
+
+    return ResponseEntity.created(uri).body(new DadosDetalhamentoUsuario(usuario));
     }
 
     @GetMapping
@@ -29,11 +35,19 @@ public class UsuarioController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DadosDetalhamentoUsuario> detalhar(@PathVariable Long id) {
+        var usuario = repository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
+    }
+
     @PutMapping
     @Transactional
-    public void atualizar(@RequestBody @Valid DadosAtualizacaoUsuario dados) {
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoUsuario dados) {
         var usuario = repository.getReferenceById(dados.id_usuario());
         usuario.atualizarInformacoes(dados);
+
+        return ResponseEntity.ok(new DadosAtualizacaoUsuario(usuario));
     }
 
     @DeleteMapping({"/{id}"})

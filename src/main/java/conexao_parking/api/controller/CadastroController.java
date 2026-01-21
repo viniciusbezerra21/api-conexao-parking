@@ -28,5 +28,4 @@ public class CadastroController {
         cadastroService.cadastrar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
 }
