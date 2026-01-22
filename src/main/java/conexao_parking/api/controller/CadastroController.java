@@ -1,8 +1,8 @@
 package conexao_parking.api.controller;
 
-import conexao_parking.api.cadastro.CadastroRepository;
-import conexao_parking.api.cadastro.CadastroRequestDTO;
-import conexao_parking.api.cadastro.CadastroService;
+import conexao_parking.api.domain.cadastro.CadastroRepository;
+import conexao_parking.api.domain.cadastro.CadastroRequestDTO;
+import conexao_parking.api.domain.cadastro.CadastroService;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;

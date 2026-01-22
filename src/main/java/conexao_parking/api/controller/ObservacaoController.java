@@ -1,6 +1,6 @@
 package conexao_parking.api.controller;
 
-import conexao_parking.api.observacao.*;
+import conexao_parking.api.domain.observacao.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
