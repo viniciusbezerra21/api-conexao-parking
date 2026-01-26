@@ -1,4 +1,4 @@
-package conexao_parking.api.infra;
+package conexao_parking.api.infra.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
