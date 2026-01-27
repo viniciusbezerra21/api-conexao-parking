@@ -1,6 +1,7 @@
 package conexao_parking.api.domain.usuario;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,8 +24,9 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id_usuario;
 
-    @Column(name = "email_corporativo")
+    @Column(name = "emailCorporativo")
     private String emailCorporativo;
+
     private String senha;
     private Boolean ativo;
 
@@ -63,4 +65,25 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return ativo;
     }
+
+    public Usuario(DadosCadastroUsuario dados) {
+        this.emailCorporativo = dados.emailCorporativo();
+        this.senha = dados.senha();
+        this.ativo = true;
+    }
+
+    public void atualizarInformacoes(@Valid DadosAtualizacaoUsuario dados) {
+        if (dados.emailCorporativo() != null) {
+            this.emailCorporativo = dados.emailCorporativo();
+        }
+        if (dados.senha() != null) {
+            this.senha = dados.senha();
+        }
+    }
+
+
+    public void excluir() {
+        this.ativo = false;
+    }
 }
+
