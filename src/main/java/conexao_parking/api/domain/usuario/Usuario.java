@@ -30,10 +30,13 @@ public class Usuario implements UserDetails {
     private String senha;
     private Boolean ativo;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(() -> role.name());
     }
 
     @Override
@@ -66,10 +69,11 @@ public class Usuario implements UserDetails {
         return ativo;
     }
 
-    public Usuario(DadosCadastroUsuario dados,  String senhaHash) {
+    public Usuario(DadosCadastroUsuario dados,  String senhaHash, Role role) {
         this.emailCorporativo = dados.emailCorporativo();
         this.senha = senhaHash;
         this.ativo = true;
+        this.role = role;
     }
 
     public void atualizarInformacoes(@Valid DadosAtualizacaoUsuario dados) {
@@ -79,6 +83,17 @@ public class Usuario implements UserDetails {
         if (dados.senha() != null) {
             this.senha = dados.senha();
         }
+    }
+
+    public Usuario(String emailCorporativo, String senhaHash, Role role) {
+        this.emailCorporativo = emailCorporativo;
+        this.senha = senhaHash;
+        this.role = role;
+        this.ativo = true;
+    }
+
+    public void tornarAdmin() {
+        this.role = Role.ROLE_ADMIN;
     }
 
 

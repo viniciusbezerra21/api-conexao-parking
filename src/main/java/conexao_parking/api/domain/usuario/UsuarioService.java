@@ -16,7 +16,7 @@ public class UsuarioService {
 
     public Usuario cadastrar(DadosCadastroUsuario dados) {
         var senhaHash = passwordEncoder.encode(dados.senha());
-        var usuario = new Usuario(dados, senhaHash);
+        var usuario = new Usuario(dados, senhaHash,Role.ROLE_USER);
         return repository.save(usuario);
     }
 }

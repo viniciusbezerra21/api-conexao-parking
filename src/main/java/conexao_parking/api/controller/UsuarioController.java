@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -68,12 +69,21 @@ public class UsuarioController {
         return ResponseEntity.ok(new DadosAtualizacaoUsuario(usuario));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping({"/{id}"})
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id) {
         var usuario = repository.getReferenceById(id);
         usuario.excluir();
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/usuario/{id}/tornar-admin")
+    public ResponseEntity tornarAdmin(@PathVariable Long id) {
+        var usuario = repository.getReferenceById(id);
+        usuario.tornarAdmin();
         return ResponseEntity.noContent().build();
     }
 
