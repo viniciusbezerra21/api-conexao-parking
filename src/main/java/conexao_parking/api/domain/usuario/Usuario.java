@@ -66,9 +66,9 @@ public class Usuario implements UserDetails {
         return ativo;
     }
 
-    public Usuario(DadosCadastroUsuario dados) {
+    public Usuario(DadosCadastroUsuario dados,  String senhaHash) {
         this.emailCorporativo = dados.emailCorporativo();
-        this.senha = dados.senha();
+        this.senha = senhaHash;
         this.ativo = true;
     }
 

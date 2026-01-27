@@ -9,5 +9,4 @@ public record DadosCadastroUsuario(
         String emailCorporativo,
         @NotBlank
         String senha) {
-
 }

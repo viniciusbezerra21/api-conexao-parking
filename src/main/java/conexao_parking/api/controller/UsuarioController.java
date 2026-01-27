@@ -1,6 +1,9 @@
 package conexao_parking.api.controller;
 
 import conexao_parking.api.domain.usuario.*;
+import conexao_parking.api.infra.security.DadosTokenJWT;
+import conexao_parking.api.infra.security.SecurityConfigurations;
+import conexao_parking.api.infra.security.TokenService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +18,34 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("usuario")
 public class UsuarioController {
 
+
     @Autowired
     private UsuarioRepository repository;
 
-    @PostMapping
+    private final UsuarioService service;
+
+    @Autowired
+    private TokenService tokenService;
+
+    public UsuarioController(UsuarioService service) {
+        this.service = service;
+    }
+
+    @PostMapping("/cadastro")
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {
-        Usuario usuario = new Usuario(dados);
-        repository.save(usuario);
+        var usuario = service.cadastrar(dados);
 
-        var uri = uriBuilder.path("/usuario/{id}").buildAndExpand(usuario.getId_usuario()).toUri();
+        var uri = uriBuilder.path("/usuario/{id}")
+                .buildAndExpand(usuario.getId_usuario())
+                .toUri();
 
-        return ResponseEntity.created(uri).body(new DadosDetalhamentoUsuario(usuario));
+        var tokenJWT = tokenService.gerarToken(usuario);
+
+        return ResponseEntity.created(uri).body(new DadosCadastroResponse
+                (new DadosDetalhamentoUsuario(usuario), tokenJWT));
     }
+
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemUsuario>> listar(@PageableDefault(size = 10)Pageable paginacao) {
