@@ -1,0 +1,1 @@
+alter table veiculo add column bloqueado tinyint not null default false;

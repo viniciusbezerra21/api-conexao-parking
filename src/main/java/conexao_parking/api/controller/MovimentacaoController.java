@@ -15,23 +15,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("movimentacao")
 public class MovimentacaoController {
 
-    private final MoviementacaoService service;
+
+
     @Autowired
     private MovimentacaoRepository repository;
 
-    public MovimentacaoController(MoviementacaoService service) {
-        this.service = service;
-    }
 
-    @PostMapping
-    @Transactional
-    public ResponseEntity Cadastrar(@RequestBody @Valid DadosCadastroMovimentacao dados, UriComponentsBuilder uriBuilder) {
-        Movimentacao movimentacao = service.cadastrar(dados);
 
-        var uri = uriBuilder.path("/movimentacao/{id}").buildAndExpand(movimentacao.getId_movimentacao()).toUri();
 
-        return ResponseEntity.created(uri).body(new DadosDetalhamentoMovimentacao(movimentacao));
-    }
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemMovimentacao>> listar(@PageableDefault(size = 10)Pageable paginacao) {

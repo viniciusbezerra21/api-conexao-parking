@@ -25,12 +25,22 @@ public class Movimentacao {
     @JoinColumn(name = "id_veiculo", nullable = false)
     private Veiculo veiculo;
 
+    @Column(name = "data_entrada")
     private LocalDateTime data_entrada;
+    @Column(name = "data_entrada")
     private LocalDateTime data_saida;
 
-    public Movimentacao(DadosCadastroMovimentacao dados, Veiculo veiculo) {
-        this.data_entrada = dados.data_entrada();
-        this.data_saida = dados.data_saida();
+    @Column(name = "observacao_entrada")
+    private String observacaoEntrada;
+
+    @Column(name = "observacao_saida")
+    private String observacaoSaida;
+
+    public Movimentacao(Veiculo veiculo, LocalDateTime data_entrada, LocalDateTime data_saida, String observacaoEntrada, String observacaoSaida) {
         this.veiculo = veiculo;
+        this.data_entrada = data_entrada;
+        this.data_saida = data_saida;
+        this.observacaoEntrada = observacaoEntrada;
+        this.observacaoSaida = observacaoSaida;
     }
 }

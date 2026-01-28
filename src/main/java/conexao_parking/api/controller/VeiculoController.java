@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @RequestMapping("veiculo")
 public class VeiculoController {
+
     private final VeiculoService service;
 
     @Autowired
@@ -53,6 +54,22 @@ public class VeiculoController {
         veiculo.atualizarInformacoes(dados);
 
         return ResponseEntity.ok(new DadosAtualizacaoVeiculo(veiculo));
+    }
+
+    @PatchMapping("/veiculo/{id}/bloquear")
+    public ResponseEntity bloquear(@PathVariable Long id) {
+        var veiculo = repository.getReferenceById(id);
+        veiculo.bloquear();
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/veiculo/{id}/desbloquear")
+    public ResponseEntity desbloquear(@PathVariable Long id) {
+        var veiculo = repository.getReferenceById(id);
+        veiculo.bloquear();
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

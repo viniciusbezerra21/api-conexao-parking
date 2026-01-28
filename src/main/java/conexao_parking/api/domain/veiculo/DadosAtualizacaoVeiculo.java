@@ -1,5 +1,8 @@
 package conexao_parking.api.domain.veiculo;
 
+import conexao_parking.api.domain.proprietario.DadosAtualizacaoProprietario;
+import conexao_parking.api.domain.proprietario.Proprietario;
+
 public record DadosAtualizacaoVeiculo(
       long id_veiculo,
       String numero_placa,

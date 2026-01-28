@@ -18,17 +18,6 @@ public class ObservacaoController {
     private ObservacaoRepository repository;
 
 
-    @PostMapping
-    @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroObservacao dados, UriComponentsBuilder uriBuilder) {
-        var observacao = new Observacao(dados);
-        repository.save(observacao);
-
-        var uri = uriBuilder.path("/observacao/{id}").buildAndExpand(observacao.getId()).toUri();
-
-        return ResponseEntity.created(uri).body(new DadosDetalhamentoObservacao(observacao));
-    }
-
     @GetMapping
     public ResponseEntity<Page<DadosListagemObservacao>> listar(@PageableDefault(size = 10)Pageable paginacao) {
         var page = repository.findAll(paginacao).map(DadosListagemObservacao::new);

@@ -34,6 +34,9 @@ public class Veiculo {
 
     private Boolean excluido;
 
+    @Column(nullable = false)
+    private Boolean bloqueado = false;
+
     public Veiculo(DadosCadastroVeiculo dados, Proprietario proprietario) {
         this.cor = dados.cor();
         this.numero_placa = dados.numero_placa();
@@ -61,5 +64,13 @@ public class Veiculo {
 
     public void excluir() {
         this.excluido = true;
+    }
+
+    public void bloquear() {
+        this.bloqueado = true;
+    }
+
+    public void desbloquear() {
+        this.bloqueado = false;
     }
 }
