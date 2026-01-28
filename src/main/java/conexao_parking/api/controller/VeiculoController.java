@@ -17,20 +17,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class VeiculoController {
 
     private final VeiculoService service;
-
-    @Autowired
     private VeiculoRepository repository;
 
-    public VeiculoController(VeiculoService service) {
+    public VeiculoController(VeiculoService service, VeiculoRepository repository) {
         this.service = service;
-
+        this.repository = repository;
     }
     @PostMapping
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroVeiculo dados, UriComponentsBuilder uriBuilder) {
         Veiculo veiculo = service.cadastrar(dados);
 
-        var uri = uriBuilder.path("/veiculo/{id}").buildAndExpand(veiculo.getId_veiculo()).toUri();
+        var uri = uriBuilder.path("/veiculo/{id}").buildAndExpand(veiculo.getIdVeiculo()).toUri();
 
         return ResponseEntity.created(uri).body(new DadosDetalhamentoVeiculo(veiculo));
     }

@@ -22,23 +22,22 @@ public class SecurityConfigurations {
     @Autowired
     private SecurityFilter securityFilter;
 
-
-    //Deixa a aplicaçãon StateLess, e organiza a ordem dos filtros além de criar exceções para os tokens em certas requisições
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(csrf -> csrf.disable())
+        return http
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/login").permitAll();
                     req.requestMatchers("/usuario/cadastro").permitAll();
-                    req.requestMatchers("/admin/**").hasRole("ADMIN");
+                    req.requestMatchers("/admin/**").hasAuthority("ADMIN");
+                    req.requestMatchers("/usuario/movimentacao/**").hasAuthority("USER");
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    //isso daqui ensina o Spring Security a Criar o metodo Authentication maneger
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -48,6 +47,4 @@ public class SecurityConfigurations {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 }

@@ -4,7 +4,7 @@ import conexao_parking.api.domain.proprietario.DadosAtualizacaoProprietario;
 import conexao_parking.api.domain.proprietario.Proprietario;
 
 public record DadosAtualizacaoVeiculo(
-      long id_veiculo,
+      Long id_veiculo,
       String numero_placa,
       TipoVeiculo tipo_veiculo,
       StatusVeiculo status,
@@ -12,7 +12,7 @@ public record DadosAtualizacaoVeiculo(
 ) {
       public DadosAtualizacaoVeiculo (Veiculo veiculo) {
             this(
-                    veiculo.getId_veiculo(),
+                    veiculo.getIdVeiculo(),
                     veiculo.getNumero_placa(),
                     veiculo.getTipo_veiculo(),
                     veiculo.getStatus(),

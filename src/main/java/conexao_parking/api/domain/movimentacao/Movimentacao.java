@@ -1,11 +1,9 @@
 package conexao_parking.api.domain.movimentacao;
 
+
 import conexao_parking.api.domain.veiculo.Veiculo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import java.time.LocalDateTime;
@@ -13,22 +11,25 @@ import java.time.LocalDateTime;
 @Table(name = "movimentacao")
 @Entity(name = "Movimentacao")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id_movimentacao")
+@EqualsAndHashCode(of = "id")
 public class Movimentacao {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_movimentacao;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_movimentacao")
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "id_veiculo", nullable = false)
     private Veiculo veiculo;
 
     @Column(name = "data_entrada")
-    private LocalDateTime data_entrada;
-    @Column(name = "data_entrada")
-    private LocalDateTime data_saida;
+    private LocalDateTime dataEntrada;
+    @Column(name = "data_saida")
+    private LocalDateTime dataSaida;
 
     @Column(name = "observacao_entrada")
     private String observacaoEntrada;
@@ -36,10 +37,10 @@ public class Movimentacao {
     @Column(name = "observacao_saida")
     private String observacaoSaida;
 
-    public Movimentacao(Veiculo veiculo, LocalDateTime data_entrada, LocalDateTime data_saida, String observacaoEntrada, String observacaoSaida) {
+    public Movimentacao(Veiculo veiculo, LocalDateTime dataEntrada, LocalDateTime dataSaida, String observacaoEntrada, String observacaoSaida) {
         this.veiculo = veiculo;
-        this.data_entrada = data_entrada;
-        this.data_saida = data_saida;
+        this.dataEntrada = dataEntrada;
+        this.dataSaida = dataSaida;
         this.observacaoEntrada = observacaoEntrada;
         this.observacaoSaida = observacaoSaida;
     }

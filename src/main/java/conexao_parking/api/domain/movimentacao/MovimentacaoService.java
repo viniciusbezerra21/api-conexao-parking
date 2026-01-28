@@ -1,8 +1,6 @@
 package conexao_parking.api.domain.movimentacao;
 
-import conexao_parking.api.domain.veiculo.Veiculo;
 import conexao_parking.api.domain.veiculo.VeiculoRepository;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,28 +16,35 @@ public class MovimentacaoService {
         this.veiculoRepository = veiculoRepository;
     }
 
-    public void liberarEntrada(DadosMovimentacaoEntrada dados) {
-        boolean veiculoBloqueado = veiculoRepository.existsByIdAndBloqueadoTrue(dados.idVeiculo());
+    public Movimentacao liberarEntrada(DadosMovimentacaoEntrada dados) {
+        boolean veiculoBloqueado = veiculoRepository.existsByIdVeiculoAndBloqueadoTrue(dados.idVeiculo());
         if (veiculoBloqueado) {
             throw new IllegalStateException("Veiculo bloqueado");
         }
 
-        boolean veiculoJaEntrou = veiculoRepository.existsByIdAndData_saidaIsNull(dados.idVeiculo()) {
+        boolean veiculoJaEntrou = movimentacaoRepository.existsByVeiculoIdVeiculoAndDataSaidaIsNull(dados.idVeiculo());
+
+        if  (veiculoJaEntrou) {
             throw new IllegalStateException("Veiculo ja possui entrada ativa");
         }
 
         var veiculo = veiculoRepository.getReferenceById(dados.idVeiculo());
 
         var movimentacao = new Movimentacao(veiculo, LocalDateTime.now(), null, dados.observacaoEntrada(), null);
-
         movimentacaoRepository.save(movimentacao);
+
+        return movimentacao;
     }
 
-    public void liberarSaida(DadosMovimentacaoSaida dados) {
-        var veiculoJaSaiu = veiculoRepository.existsByIdAndData_saidaIsNull(dados.idMovimentacao());
-        if (!veiculoJaSaiu) {
-            throw new IllegalStateException("Veiculo Ja saiu");
-        }
+    public Movimentacao liberarSaida(DadosMovimentacaoSaida dados) {
+        var movimentacao = movimentacaoRepository.findByIdAndDataSaidaIsNull(dados.idMovimentacao())
+                .orElseThrow(() -> new IllegalStateException("Veiculo já saiu"));
+
+        movimentacao.setDataSaida(LocalDateTime.now());
+        movimentacao.setObservacaoSaida(dados.observacaoSaida());
+        movimentacaoRepository.save(movimentacao);
+
+        return movimentacao;
     }
 
 }

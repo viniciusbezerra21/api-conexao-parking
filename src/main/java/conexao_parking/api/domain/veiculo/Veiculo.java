@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id_veiculo")
+@EqualsAndHashCode(of = "idVeiculo")
 public class Veiculo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_veiculo;
+    private Long idVeiculo;
 
     @ManyToOne
     @JoinColumn(name = "id_proprietario", nullable = false)
