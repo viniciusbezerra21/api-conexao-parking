@@ -1,10 +1,12 @@
 package conexao_parking.api.infra.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -22,6 +24,7 @@ public class TratadorDeErros {
         return ResponseEntity.badRequest().body(erros.stream().map(DadosErroValidacao::new).toList());
     }
 
+
     private record DadosErroValidacao(
             String campo,
             String mensagem
@@ -31,6 +34,11 @@ public class TratadorDeErros {
                     erro.getField(),
                     erro.getDefaultMessage()
             );
+        }
+    }
+    public class VeiculoBloqueadoException extends RuntimeException {
+        public VeiculoBloqueadoException() {
+            super("Veículo bloqueado");
         }
     }
 }

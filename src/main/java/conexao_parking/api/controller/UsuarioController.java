@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -60,13 +61,13 @@ public class UsuarioController {
         return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
     }
 
-    @PutMapping
-    @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoUsuario dados) {
-        var usuario = repository.getReferenceById(dados.id_usuario());
-        usuario.atualizarInformacoes(dados);
 
-        return ResponseEntity.ok(new DadosAtualizacaoUsuario(usuario));
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity atualizar(@PathVariable Long id,@RequestBody @Valid DadosAtualizacaoUsuario dados, @AuthenticationPrincipal Usuario usuarioLogado) {
+        var usuarioAtualizado = service.atualizar(id, dados, usuarioLogado);
+        return ResponseEntity.ok(new DadosAtualizacaoUsuario(usuarioAtualizado.getId_usuario(), usuarioAtualizado.getEmailCorporativo(), null));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

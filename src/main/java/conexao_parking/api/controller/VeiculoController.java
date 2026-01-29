@@ -54,20 +54,22 @@ public class VeiculoController {
         return ResponseEntity.ok(new DadosAtualizacaoVeiculo(veiculo));
     }
 
-    @PatchMapping("/veiculo/{id}/bloquear")
+    @PatchMapping("/{id}/bloquear")
+    @Transactional
     public ResponseEntity bloquear(@PathVariable Long id) {
         var veiculo = repository.getReferenceById(id);
         veiculo.bloquear();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new DadosDetalhamentoVeiculo(veiculo) + "Veículo bloqueado com sucesso");
     }
 
-    @PatchMapping("/veiculo/{id}/desbloquear")
+    @PatchMapping("/{id}/desbloquear")
+    @Transactional
     public ResponseEntity desbloquear(@PathVariable Long id) {
         var veiculo = repository.getReferenceById(id);
-        veiculo.bloquear();
+        veiculo.desbloquear();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new DadosDetalhamentoVeiculo(veiculo) + "Veículo desbloqueado com sucesso");
     }
 
     @DeleteMapping("/{id}")

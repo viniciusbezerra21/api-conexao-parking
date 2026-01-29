@@ -19,7 +19,7 @@ public class MovimentacaoService {
     public Movimentacao liberarEntrada(DadosMovimentacaoEntrada dados) {
         boolean veiculoBloqueado = veiculoRepository.existsByIdVeiculoAndBloqueadoTrue(dados.idVeiculo());
         if (veiculoBloqueado) {
-            throw new IllegalStateException("Veiculo bloqueado");
+            throw new IllegalStateException("Veiculo bloqueado!");
         }
 
         boolean veiculoJaEntrou = movimentacaoRepository.existsByVeiculoIdVeiculoAndDataSaidaIsNull(dados.idVeiculo());

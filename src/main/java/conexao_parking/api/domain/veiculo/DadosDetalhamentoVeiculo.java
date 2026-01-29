@@ -7,7 +7,8 @@ public record DadosDetalhamentoVeiculo (
         Boolean visitante,
         TipoVeiculo tipo_veiculo,
         StatusVeiculo status,
-        String nome
+        String nome,
+        Boolean bloqueado
 ) {
     public DadosDetalhamentoVeiculo(Veiculo veiculo) {
         this(
@@ -17,7 +18,8 @@ public record DadosDetalhamentoVeiculo (
                 veiculo.getVisitante(),
                 veiculo.getTipo_veiculo(),
                 veiculo.getStatus(),
-                veiculo.getProprietario().getNome()
+                veiculo.getProprietario().getNome(),
+                veiculo.getBloqueado()
         );
     }
 }

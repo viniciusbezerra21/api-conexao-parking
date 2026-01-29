@@ -6,7 +6,8 @@ public record DadosListagemVeiculoDashboard(
         TipoVeiculo tipo_veiculo,
         String numero_placa,
         String cor,
-        StatusVeiculo status
+        StatusVeiculo status,
+        Boolean bloqueado
 
 ) {
     public DadosListagemVeiculoDashboard(Veiculo veiculo) {
@@ -16,7 +17,8 @@ public record DadosListagemVeiculoDashboard(
                 veiculo.getTipo_veiculo(),
                 veiculo.getNumero_placa(),
                 veiculo.getCor(),
-                veiculo.getStatus()
+                veiculo.getStatus(),
+                veiculo.getBloqueado()
         );
     }
 }

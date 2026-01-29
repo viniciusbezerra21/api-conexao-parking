@@ -7,13 +7,6 @@ import jakarta.validation.constraints.NotNull;
 public record DadosAtualizacaoUsuario(
         long id_usuario,
         String emailCorporativo,
-        String senha
+        String novaSenha
 ) {
-    public DadosAtualizacaoUsuario(Usuario usuario) {
-        this(
-                usuario.getId_usuario(),
-                usuario.getEmailCorporativo(),
-                usuario.getSenha()
-        );
-    }
 }

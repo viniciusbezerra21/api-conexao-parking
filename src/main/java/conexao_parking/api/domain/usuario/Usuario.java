@@ -2,10 +2,7 @@ package conexao_parking.api.domain.usuario;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +13,7 @@ import java.util.List;
 @Table(name = "usuario")
 @Entity(name = "Usuario")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id_usuario")
@@ -77,14 +75,7 @@ public class Usuario implements UserDetails {
         this.role = role;
     }
 
-    public void atualizarInformacoes(@Valid DadosAtualizacaoUsuario dados) {
-        if (dados.emailCorporativo() != null) {
-            this.emailCorporativo = dados.emailCorporativo();
-        }
-        if (dados.senha() != null) {
-            this.senha = dados.senha();
-        }
-    }
+
 
     public Usuario(String emailCorporativo, String senhaHash, Role role) {
         this.emailCorporativo = emailCorporativo;

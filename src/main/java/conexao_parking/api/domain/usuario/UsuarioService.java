@@ -19,4 +19,19 @@ public class UsuarioService {
         var usuario = new Usuario(dados, senhaHash,Role.ROLE_USER);
         return repository.save(usuario);
     }
+
+    public Usuario atualizar(Long idUsuario, DadosAtualizacaoUsuario dados, Usuario usuarioLogado) {
+        var usuario = repository.getReferenceById(idUsuario);
+
+        if (usuarioLogado.getRole() == Role.ROLE_ADMIN) {
+            if (dados.emailCorporativo() != null) {
+                usuario.setEmailCorporativo(dados.emailCorporativo());
+            }
+            if (dados.novaSenha() != null && !dados.novaSenha().isBlank()) {
+                usuario.setSenha(passwordEncoder.encode(dados.novaSenha()));
+            }
+        }
+
+        return usuario;
+    }
 }
