@@ -4,6 +4,7 @@ import conexao_parking.api.domain.usuario.*;
 import conexao_parking.api.infra.security.DadosTokenJWT;
 import conexao_parking.api.infra.security.SecurityConfigurations;
 import conexao_parking.api.infra.security.TokenService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,22 +50,27 @@ public class UsuarioController {
     }
 
 
+
     @GetMapping
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<Page<DadosListagemUsuario>> listar(@PageableDefault(size = 10)Pageable paginacao) {
         var page = repository.findAllByAtivoTrue(paginacao).map(DadosListagemUsuario::new);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<DadosDetalhamentoUsuario> detalhar(@PathVariable Long id) {
         var usuario = repository.getReferenceById(id);
         return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
     }
 
 
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity atualizar(@PathVariable Long id,@RequestBody @Valid DadosAtualizacaoUsuario dados, @AuthenticationPrincipal Usuario usuarioLogado) {
         var usuarioAtualizado = service.atualizar(id, dados, usuarioLogado);
         return ResponseEntity.ok(new DadosAtualizacaoUsuario(usuarioAtualizado.getId_usuario(), usuarioAtualizado.getEmailCorporativo(), null));
@@ -73,6 +79,7 @@ public class UsuarioController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping({"/{id}"})
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity excluir(@PathVariable Long id) {
         var usuario = repository.getReferenceById(id);
         usuario.excluir();
@@ -82,6 +89,7 @@ public class UsuarioController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/usuario/{id}/tornar-admin")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity tornarAdmin(@PathVariable Long id) {
         var usuario = repository.getReferenceById(id);
         usuario.tornarAdmin();

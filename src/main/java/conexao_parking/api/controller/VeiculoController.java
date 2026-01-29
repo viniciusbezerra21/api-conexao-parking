@@ -2,6 +2,7 @@ package conexao_parking.api.controller;
 
 
 import conexao_parking.api.domain.veiculo.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("veiculo")
+@SecurityRequirement(name = "bearer-key")
 public class VeiculoController {
 
     private final VeiculoService service;

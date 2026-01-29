@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface VeiculoRepository extends JpaRepository<Veiculo, Long> {
     Page<Veiculo> findByExcluidoFalse(Pageable paginacao);
 
-    boolean existsByIdVeiculoAndBloqueadoTrue(Long idVeiculo);
+    Boolean existsByIdVeiculoAndBloqueadoTrue(Long idVeiculo);
 }
