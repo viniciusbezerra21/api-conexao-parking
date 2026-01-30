@@ -1,5 +1,7 @@
 package conexao_parking.api.domain.veiculo;
 
+import conexao_parking.api.domain.proprietario.Proprietario;
+
 public record DadosDetalhamentoVeiculo (
         Long idVeiculo,
         String numero_placa,
@@ -7,7 +9,7 @@ public record DadosDetalhamentoVeiculo (
         Boolean visitante,
         TipoVeiculo tipo_veiculo,
         StatusVeiculo status,
-        String nome,
+        Proprietario proprietario,
         Boolean bloqueado
 ) {
     public DadosDetalhamentoVeiculo(Veiculo veiculo) {
@@ -18,7 +20,7 @@ public record DadosDetalhamentoVeiculo (
                 veiculo.getVisitante(),
                 veiculo.getTipo_veiculo(),
                 veiculo.getStatus(),
-                veiculo.getProprietario().getNome(),
+                veiculo.getProprietario(),
                 veiculo.getBloqueado()
         );
     }

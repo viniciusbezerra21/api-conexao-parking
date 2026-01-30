@@ -1,8 +1,9 @@
 package conexao_parking.api.domain.veiculo;
 
+import conexao_parking.api.domain.proprietario.Proprietario;
+
 public record DadosListagemVeiculoDashboard(
-        String nome,
-        String cpf_proprietario,
+        Proprietario proprietario,
         TipoVeiculo tipo_veiculo,
         String numero_placa,
         String cor,
@@ -12,8 +13,7 @@ public record DadosListagemVeiculoDashboard(
 ) {
     public DadosListagemVeiculoDashboard(Veiculo veiculo) {
         this(
-                veiculo.getProprietario().getNome(),
-                veiculo.getProprietario().getCpf_proprietario(),
+                veiculo.getProprietario(),
                 veiculo.getTipo_veiculo(),
                 veiculo.getNumero_placa(),
                 veiculo.getCor(),
