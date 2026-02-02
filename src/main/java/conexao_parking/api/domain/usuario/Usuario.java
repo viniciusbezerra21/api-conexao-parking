@@ -1,7 +1,6 @@
 package conexao_parking.api.domain.usuario;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,7 +20,8 @@ public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_usuario;
+    @Column(name = "id_usuario")
+    private long idUsuario;
 
     @Column(name = "email_corporativo")
     private String emailCorporativo;

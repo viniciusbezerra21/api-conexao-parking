@@ -27,7 +27,7 @@ public class TokenService {
             return JWT.create()
                     .withIssuer(ISSUER)
                     .withSubject(usuario.getEmailCorporativo())
-                    .withClaim("id", usuario.getId_usuario())
+                    .withClaim("id", usuario.getIdUsuario())
                     .withClaim("role", usuario.getRole().name())
                     .withExpiresAt(dataExpiracao())
                     .sign(algoritmo);
@@ -51,7 +51,7 @@ public class TokenService {
     }
 
     private Instant dataExpiracao() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(16).toInstant(ZoneOffset.of("-03:00"));
     }
 
 }

@@ -6,6 +6,6 @@ public record DadosCadastroProprietario(
         @NotBlank
         String nome,
         @NotBlank
-        String cpf_proprietario
+        String cpfProprietario
 ) {
 }

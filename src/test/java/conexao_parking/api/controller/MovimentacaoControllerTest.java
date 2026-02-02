@@ -51,10 +51,10 @@ class MovimentacaoControllerTest {
         var proprietario = Mockito.mock(Proprietario.class);
 
         Mockito.when(proprietario.getNome()).thenReturn("Proprietario Teste");
-        Mockito.when(proprietario.getCpf_proprietario()).thenReturn("00000000000");
+        Mockito.when(proprietario.getCpfProprietario()).thenReturn("00000000000");
 
         Mockito.when(veiculo.getProprietario()).thenReturn(proprietario);
-        Mockito.when(veiculo.getNumero_placa()).thenReturn("ABC1234");
+        Mockito.when(veiculo.getNumeroPlaca()).thenReturn("ABC1234");
         Mockito.when(veiculo.getCor()).thenReturn("Preto");
 
         Mockito.when(movimentacao.getId()).thenReturn(1L);

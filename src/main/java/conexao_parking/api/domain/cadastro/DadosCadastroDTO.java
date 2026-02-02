@@ -13,6 +13,6 @@ public record DadosCadastroDTO(
         @NotNull
         DadosCadastroUsuario usuario,
         @NotNull
-        LocalDateTime data_cadastro
+        LocalDateTime dataCadastro
 ) {
 }

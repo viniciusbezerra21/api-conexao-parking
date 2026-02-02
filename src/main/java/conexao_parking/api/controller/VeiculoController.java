@@ -49,7 +49,7 @@ public class VeiculoController {
     @PutMapping
     @Transactional
     public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoVeiculo dados) {
-        var veiculo = repository.getReferenceById(dados.id_veiculo());
+        var veiculo = repository.getReferenceById(dados.idVeiculo());
         veiculo.atualizarInformacoes(dados);
 
         return ResponseEntity.ok(new DadosAtualizacaoVeiculo(veiculo));

@@ -2,15 +2,15 @@ package conexao_parking.api.domain.proprietario;
 
 
 public record DadosDetalhamentoProprietario(
-        long id_proprietario,
+        long idProprietario,
         String nome,
-        String cpf_proprietario
+        String cpfProprietario
 ) {
     public DadosDetalhamentoProprietario(Proprietario proprietario) {
         this(
-                proprietario.getId_proprietario(),
+                proprietario.getIdProprietario(),
                 proprietario.getNome(),
-                proprietario.getCpf_proprietario()
+                proprietario.getCpfProprietario()
         );
     }
 }

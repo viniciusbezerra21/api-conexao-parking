@@ -13,24 +13,25 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "idVeiculo")
+@EqualsAndHashCode(of = "id_veiculo")
 public class Veiculo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_veiculo")
     private Long idVeiculo;
 
     @ManyToOne
     @JoinColumn(name = "id_proprietario", nullable = false)
     private Proprietario proprietario;
 
-    private String numero_placa;
+    private String numeroPlaca;
     private String cor;
     private Boolean visitante;
 
     @Enumerated(EnumType.STRING)
     private StatusVeiculo status;
     @Enumerated(EnumType.STRING)
-    private TipoVeiculo tipo_veiculo;
+    private TipoVeiculo tipoVeiculo;
 
     private Boolean excluido;
 
@@ -39,20 +40,20 @@ public class Veiculo {
 
     public Veiculo(DadosCadastroVeiculo dados, Proprietario proprietario) {
         this.cor = dados.cor();
-        this.numero_placa = dados.numero_placa();
+        this.numeroPlaca = dados.numeroPlaca();
         this.visitante = dados.visitante();
-        this.tipo_veiculo = dados.tipo_veiculo();
+        this.tipoVeiculo = dados.tipoVeiculo();
         this.proprietario =  proprietario;
         this.status = dados.status();
         this.excluido = false;
     }
 
     public void atualizarInformacoes(@Valid DadosAtualizacaoVeiculo dados) {
-        if (dados.numero_placa() != null) {
-           this.numero_placa = dados.numero_placa();
+        if (dados.numeroPlaca() != null) {
+           this.numeroPlaca = dados.numeroPlaca();
         }
-        if (dados.tipo_veiculo() != null) {
-            this.tipo_veiculo = dados.tipo_veiculo();
+        if (dados.tipoVeiculo() != null) {
+            this.tipoVeiculo = dados.tipoVeiculo();
         }
         if (dados.status() != null) {
             this.status = dados.status();

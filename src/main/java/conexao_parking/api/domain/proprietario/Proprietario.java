@@ -17,21 +17,23 @@ import lombok.NoArgsConstructor;
 public class Proprietario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_proprietario;
+    @Column(name = "id_proprietario")
+    private long idProprietario;
     private String nome;
-    private String cpf_proprietario;
+    @Column(name = "cpf_proprietario")
+    private String cpfProprietario;
 
     public Proprietario(DadosCadastroProprietario dados) {
         this.nome = dados.nome();
-        this.cpf_proprietario = dados.cpf_proprietario();
+        this.cpfProprietario = dados.cpfProprietario();
     }
 
     public void atualizarInformacoes(@Valid DadosAtualizacaoProprietario dados) {
         if (dados.nome() != null) {
             this.nome = dados.nome();
         }
-        if (dados.cpf_proprietario() != null) {
-            this.cpf_proprietario = dados.cpf_proprietario();
+        if (dados.cpfProprietario() != null) {
+            this.cpfProprietario = dados.cpfProprietario();
         }
     }
 }

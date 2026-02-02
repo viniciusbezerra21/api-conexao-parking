@@ -4,8 +4,8 @@ import conexao_parking.api.domain.proprietario.Proprietario;
 
 public record DadosListagemVeiculoDashboard(
         Proprietario proprietario,
-        TipoVeiculo tipo_veiculo,
-        String numero_placa,
+        TipoVeiculo tipoVeiculo,
+        String numeroPlaca,
         String cor,
         StatusVeiculo status,
         Boolean bloqueado
@@ -14,8 +14,8 @@ public record DadosListagemVeiculoDashboard(
     public DadosListagemVeiculoDashboard(Veiculo veiculo) {
         this(
                 veiculo.getProprietario(),
-                veiculo.getTipo_veiculo(),
-                veiculo.getNumero_placa(),
+                veiculo.getTipoVeiculo(),
+                veiculo.getNumeroPlaca(),
                 veiculo.getCor(),
                 veiculo.getStatus(),
                 veiculo.getBloqueado()

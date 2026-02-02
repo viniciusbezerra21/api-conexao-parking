@@ -8,13 +8,13 @@ import jakarta.validation.constraints.NotNull;
 
 public record DadosCadastroVeiculo(
         @NotBlank
-        String numero_placa,
+        String numeroPlaca,
         @NotBlank
         String cor,
         @NotNull
         Boolean visitante,
         @Enumerated
-        TipoVeiculo tipo_veiculo,
+        TipoVeiculo tipoVeiculo,
         @Enumerated
         StatusVeiculo status,
         @NotNull

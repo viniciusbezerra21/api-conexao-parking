@@ -61,7 +61,7 @@ class UsuarioControllerTest {
 
     private Usuario createUsuarioMock() {
         var usuario = Mockito.mock(Usuario.class);
-        Mockito.when(usuario.getId_usuario()).thenReturn(1L);
+        Mockito.when(usuario.getIdUsuario()).thenReturn(1L);
         Mockito.when(usuario.getEmailCorporativo()).thenReturn("usuario@empresa.com");
         return usuario;
     }

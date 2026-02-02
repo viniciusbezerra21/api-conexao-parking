@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 public record DadosAtualizacaoUsuario(
-        long id_usuario,
+        long idUsuario,
         String emailCorporativo,
         String novaSenha
 ) {

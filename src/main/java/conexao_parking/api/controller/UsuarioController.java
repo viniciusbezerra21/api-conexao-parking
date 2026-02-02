@@ -40,7 +40,7 @@ public class UsuarioController {
         var usuario = service.cadastrar(dados);
 
         var uri = uriBuilder.path("/usuario/{id}")
-                .buildAndExpand(usuario.getId_usuario())
+                .buildAndExpand(usuario.getIdUsuario())
                 .toUri();
 
         var tokenJWT = tokenService.gerarToken(usuario);
@@ -73,7 +73,7 @@ public class UsuarioController {
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity atualizar(@PathVariable Long id,@RequestBody @Valid DadosAtualizacaoUsuario dados, @AuthenticationPrincipal Usuario usuarioLogado) {
         var usuarioAtualizado = service.atualizar(id, dados, usuarioLogado);
-        return ResponseEntity.ok(new DadosAtualizacaoUsuario(usuarioAtualizado.getId_usuario(), usuarioAtualizado.getEmailCorporativo(), null));
+        return ResponseEntity.ok(new DadosAtualizacaoUsuario(usuarioAtualizado.getIdUsuario(), usuarioAtualizado.getEmailCorporativo(), null));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

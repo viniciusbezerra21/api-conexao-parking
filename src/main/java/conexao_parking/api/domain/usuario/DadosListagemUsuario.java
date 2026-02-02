@@ -3,14 +3,14 @@ package conexao_parking.api.domain.usuario;
 import conexao_parking.api.domain.usuario.Usuario;
 
 public record DadosListagemUsuario(
-        long id_usuario,
+        long idUsuario,
         String emailCorporativo,
         String senha,
         Boolean ativo
 ) {
     public DadosListagemUsuario(Usuario usuario) {
         this(
-                usuario.getId_usuario(),
+                usuario.getIdUsuario(),
                 usuario.getEmailCorporativo(),
                 usuario.getSenha(),
                 usuario.getAtivo()

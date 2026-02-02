@@ -103,7 +103,7 @@ class VeiculoControllerTest {
     void atualizar() {
         var veiculo = Mockito.mock(Veiculo.class);
         var dados = Mockito.mock(DadosAtualizacaoVeiculo.class);
-        Mockito.when(dados.id_veiculo()).thenReturn(1L);
+        Mockito.when(dados.idVeiculo()).thenReturn(1L);
         Mockito.when(repository.getReferenceById(1L)).thenReturn(veiculo);
 
         ResponseEntity<?> resp = controller.atualizar(dados);
@@ -165,10 +165,10 @@ class VeiculoControllerTest {
             this(
                     veiculo != null && veiculo.getProprietario() != null && veiculo.getProprietario().getNome() != null
                             ? veiculo.getProprietario().getNome() : "",
-                    veiculo != null && veiculo.getProprietario() != null && veiculo.getProprietario().getCpf_proprietario() != null
-                            ? veiculo.getProprietario().getCpf_proprietario() : "",
-                    veiculo != null ? veiculo.getTipo_veiculo() : null,
-                    veiculo != null && veiculo.getNumero_placa() != null ? veiculo.getNumero_placa() : "",
+                    veiculo != null && veiculo.getProprietario() != null && veiculo.getProprietario().getCpfProprietario() != null
+                            ? veiculo.getProprietario().getCpfProprietario() : "",
+                    veiculo != null ? veiculo.getTipoVeiculo() : null,
+                    veiculo != null && veiculo.getNumeroPlaca() != null ? veiculo.getNumeroPlaca() : "",
                     veiculo != null && veiculo.getCor() != null ? veiculo.getCor() : "",
                     veiculo != null ? veiculo.getStatus() : null,
                     veiculo != null ? veiculo.getBloqueado() : Boolean.FALSE
@@ -191,10 +191,10 @@ class VeiculoControllerTest {
                     veiculo != null ? veiculo.getIdVeiculo() : null,
                     veiculo != null && veiculo.getProprietario() != null && veiculo.getProprietario().getNome() != null
                             ? veiculo.getProprietario().getNome() : "",
-                    veiculo != null && veiculo.getProprietario() != null && veiculo.getProprietario().getCpf_proprietario() != null
-                            ? veiculo.getProprietario().getCpf_proprietario() : "",
-                    veiculo != null ? veiculo.getTipo_veiculo() : null,
-                    veiculo != null && veiculo.getNumero_placa() != null ? veiculo.getNumero_placa() : "",
+                    veiculo != null && veiculo.getProprietario() != null && veiculo.getProprietario().getCpfProprietario() != null
+                            ? veiculo.getProprietario().getCpfProprietario() : "",
+                    veiculo != null ? veiculo.getTipoVeiculo() : null,
+                    veiculo != null && veiculo.getNumeroPlaca() != null ? veiculo.getNumeroPlaca() : "",
                     veiculo != null && veiculo.getCor() != null ? veiculo.getCor() : "",
                     veiculo != null ? veiculo.getStatus() : null,
                     veiculo != null ? veiculo.getBloqueado() : Boolean.FALSE
@@ -207,11 +207,11 @@ class VeiculoControllerTest {
         var proprietario = Mockito.mock(Proprietario.class);
 
         Mockito.when(proprietario.getNome()).thenReturn("Proprietario Teste");
-        Mockito.when(proprietario.getCpf_proprietario()).thenReturn("00000000000");
+        Mockito.when(proprietario.getCpfProprietario()).thenReturn("00000000000");
 
         Mockito.when(veiculo.getProprietario()).thenReturn(proprietario);
-        Mockito.when(veiculo.getTipo_veiculo()).thenReturn(null);
-        Mockito.when(veiculo.getNumero_placa()).thenReturn("ABC1234");
+        Mockito.when(veiculo.getTipoVeiculo()).thenReturn(null);
+        Mockito.when(veiculo.getNumeroPlaca()).thenReturn("ABC1234");
         Mockito.when(veiculo.getCor()).thenReturn("Preto");
         Mockito.when(veiculo.getStatus()).thenReturn(null);
         Mockito.when(veiculo.getBloqueado()).thenReturn(false);

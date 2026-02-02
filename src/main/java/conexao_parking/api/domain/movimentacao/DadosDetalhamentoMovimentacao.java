@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 
 public record DadosDetalhamentoMovimentacao(
         long idMovimentacao,
-        LocalDateTime data_entrada,
-        LocalDateTime data_saida,
+        LocalDateTime dataEntrada,
+        LocalDateTime dataSaida,
         String observacaoEntrada,
         String observacaoSaida
 ) {
