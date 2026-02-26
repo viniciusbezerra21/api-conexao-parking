@@ -67,7 +67,7 @@ public class UsuarioController {
 
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     @Transactional
     @SecurityRequirement(name = "bearer-key")
@@ -76,7 +76,7 @@ public class UsuarioController {
         return ResponseEntity.ok(new DadosAtualizacaoUsuario(usuarioAtualizado.getIdUsuario(), usuarioAtualizado.getEmailCorporativo(), null));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping({"/{id}"})
     @Transactional
     @SecurityRequirement(name = "bearer-key")
@@ -87,7 +87,7 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/usuario/{id}/tornar-admin")
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity tornarAdmin(@PathVariable Long id) {

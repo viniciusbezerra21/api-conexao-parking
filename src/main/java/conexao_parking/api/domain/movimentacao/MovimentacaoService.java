@@ -2,7 +2,6 @@ package conexao_parking.api.domain.movimentacao;
 
 import conexao_parking.api.domain.movimentacao.validadores.ValidadorMovimentacao;
 import conexao_parking.api.domain.veiculo.VeiculoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

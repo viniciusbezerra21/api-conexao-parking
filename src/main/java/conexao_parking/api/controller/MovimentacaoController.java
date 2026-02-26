@@ -31,7 +31,7 @@ public class MovimentacaoController {
         this.repository = repository;
     }
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/liberar-entrada")
     @Transactional
     public ResponseEntity liberarEntrada(@RequestBody @Valid DadosMovimentacaoEntrada dados, UriComponentsBuilder uriBuilder) {
@@ -42,7 +42,7 @@ public class MovimentacaoController {
         return ResponseEntity.created(uri).body(new DadosDetalhamentoMovimentacao(movimentacao));
     }
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/liberar-saida")
     @Transactional
     public ResponseEntity liberarSaida(@RequestBody @Valid DadosMovimentacaoSaida dados, UriComponentsBuilder uriBuilder) {
