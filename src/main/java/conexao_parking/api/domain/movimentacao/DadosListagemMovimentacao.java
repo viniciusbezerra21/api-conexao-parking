@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 public record DadosListagemMovimentacao(
         Long id,
         String numeroPlaca,
+        String nomeProprietario,
+        String cpfProprietario,
         LocalDateTime dataEntrada,
         LocalDateTime dataSaida,
         String observacaoEntrada,
@@ -14,6 +16,8 @@ public record DadosListagemMovimentacao(
         this(
                 movimentacao.getId(),
                 movimentacao.getVeiculo().getNumeroPlaca(),
+                movimentacao.getVeiculo().getProprietario().getNome(),
+                movimentacao.getVeiculo().getProprietario().getCpfProprietario(),
                 movimentacao.getDataEntrada(),
                 movimentacao.getDataSaida(),
                 movimentacao.getObservacaoEntrada(),
