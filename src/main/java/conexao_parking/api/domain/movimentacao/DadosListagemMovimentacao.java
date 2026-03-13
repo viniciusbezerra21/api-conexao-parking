@@ -3,6 +3,7 @@ package conexao_parking.api.domain.movimentacao;
 import java.time.LocalDateTime;
 
 public record DadosListagemMovimentacao(
+        Long id,
         String numeroPlaca,
         LocalDateTime dataEntrada,
         LocalDateTime dataSaida,
@@ -11,6 +12,7 @@ public record DadosListagemMovimentacao(
 ) {
     public DadosListagemMovimentacao(Movimentacao movimentacao) {
         this(
+                movimentacao.getId(),
                 movimentacao.getVeiculo().getNumeroPlaca(),
                 movimentacao.getDataEntrada(),
                 movimentacao.getDataSaida(),
