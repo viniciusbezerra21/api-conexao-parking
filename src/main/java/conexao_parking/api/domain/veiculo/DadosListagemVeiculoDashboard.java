@@ -3,6 +3,7 @@ package conexao_parking.api.domain.veiculo;
 import conexao_parking.api.domain.proprietario.Proprietario;
 
 public record DadosListagemVeiculoDashboard(
+        Long idVeiculo,
         Proprietario proprietario,
         TipoVeiculo tipoVeiculo,
         String numeroPlaca,
@@ -13,6 +14,7 @@ public record DadosListagemVeiculoDashboard(
 ) {
     public DadosListagemVeiculoDashboard(Veiculo veiculo) {
         this(
+                veiculo.getIdVeiculo(),
                 veiculo.getProprietario(),
                 veiculo.getTipoVeiculo(),
                 veiculo.getNumeroPlaca(),
