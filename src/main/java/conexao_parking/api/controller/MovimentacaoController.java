@@ -13,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
+
+
 @RestController
 @RequestMapping("movimentacao")
 @SecurityRequirement(name = "bearer-key")
@@ -55,7 +58,8 @@ public class MovimentacaoController {
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemMovimentacao>> listar(@PageableDefault(size = 10)Pageable paginacao) {
-        var page = repository.findAll(paginacao).map(DadosListagemMovimentacao::new);
+        var dia = LocalDate.now().atStartOfDay();
+        var page = repository.findAllByDataEntradaAfter(dia, paginacao).map(DadosListagemMovimentacao::new);
         return ResponseEntity.ok(page);
     }
 
