@@ -110,7 +110,9 @@ class MovimentacaoControllerTest {
         var movimentacao = createMovimentacaoMockWithVeiculoAndProprietario();
         var page = new PageImpl<>(List.of(movimentacao));
 
-        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(page);
+
+        Mockito.when(repository.findAllByDataEntradaAfter(any(), any(Pageable.class)))
+                .thenReturn(page);
 
         ResponseEntity<?> resp = controller.listar(PageRequest.of(0, 10));
 
