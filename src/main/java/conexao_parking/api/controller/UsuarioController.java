@@ -1,8 +1,6 @@
 package conexao_parking.api.controller;
 
 import conexao_parking.api.domain.usuario.*;
-import conexao_parking.api.infra.security.DadosTokenJWT;
-import conexao_parking.api.infra.security.SecurityConfigurations;
 import conexao_parking.api.infra.security.TokenService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
@@ -49,6 +47,11 @@ public class UsuarioController {
                 (new DadosDetalhamentoUsuario(usuario), tokenJWT));
     }
 
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> verificarEmailDisponivel(@RequestParam String emailCorporativo) {
+        boolean emailDisponivel = service.emailDisponivel(emailCorporativo);
+        return ResponseEntity.ok(emailDisponivel);
+    }
 
 
     @GetMapping

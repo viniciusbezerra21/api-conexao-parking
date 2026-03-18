@@ -155,4 +155,28 @@ class UsuarioControllerTest {
 
         assertEquals(HttpStatus.NO_CONTENT, resp.getStatusCode());
     }
+
+    @WithMockUser
+    @DisplayName("Verifica disponibilidade de email retornando true quando disponível")
+    @Test
+    void verificarEmailDisponivel_true() {
+        Mockito.when(service.emailDisponivel("teste@empresa.com")).thenReturn(true);
+
+        ResponseEntity<Boolean> resp = controller.verificarEmailDisponivel("teste@empresa.com");
+
+        assertEquals(HttpStatus.OK, resp.getStatusCode());
+        assertTrue(resp.getBody());
+    }
+
+    @WithMockUser
+    @DisplayName("Verifica disponibilidade de email retornando false quando já existe")
+    @Test
+    void verificarEmailDisponivel_false() {
+        Mockito.when(service.emailDisponivel("teste@empresa.com")).thenReturn(false);
+
+        ResponseEntity<Boolean> resp = controller.verificarEmailDisponivel("teste@empresa.com");
+
+        assertEquals(HttpStatus.OK, resp.getStatusCode());
+        assertFalse(resp.getBody());
+    }
 }

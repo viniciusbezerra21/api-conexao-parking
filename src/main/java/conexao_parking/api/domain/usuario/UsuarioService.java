@@ -43,4 +43,8 @@ public class UsuarioService {
 
         return usuario;
     }
+
+    public boolean emailDisponivel(String emailCorporativo) {
+        return !repository.existsByEmailCorporativo(emailCorporativo);
+    }
 }

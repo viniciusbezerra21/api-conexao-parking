@@ -42,6 +42,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/veiculo/bloquear/**").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/veiculo/desbloquear/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/usuario/check-email").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
