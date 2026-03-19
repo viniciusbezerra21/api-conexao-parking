@@ -25,6 +25,7 @@ public class Veiculo {
     private Proprietario proprietario;
 
     private String numeroPlaca;
+    private String empresa;
     private String cor;
     private Boolean visitante;
 
@@ -40,6 +41,7 @@ public class Veiculo {
 
     public Veiculo(DadosCadastroVeiculo dados, Proprietario proprietario) {
         this.cor = dados.cor();
+        this.empresa = dados.empresa();
         this.numeroPlaca = dados.numeroPlaca();
         this.visitante = dados.visitante();
         this.tipoVeiculo = dados.tipoVeiculo();
@@ -60,6 +62,9 @@ public class Veiculo {
         }
         if (dados.cor() != null) {
             this.cor = dados.cor();
+        }
+        if (dados.empresa() != null) {
+            this.empresa = dados.empresa();
         }
     }
 

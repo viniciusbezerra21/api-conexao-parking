@@ -1,0 +1,1 @@
+alter table veiculo add column empresa varchar(100) not null default 'Conexão Marítima';

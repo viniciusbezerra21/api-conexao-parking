@@ -1,14 +1,14 @@
 package conexao_parking.api.domain.veiculo;
 
-import conexao_parking.api.domain.proprietario.DadosAtualizacaoProprietario;
-import conexao_parking.api.domain.proprietario.Proprietario;
+
 
 public record DadosAtualizacaoVeiculo(
       Long idVeiculo,
       String numeroPlaca,
       TipoVeiculo tipoVeiculo,
       StatusVeiculo status,
-      String cor
+      String cor,
+      String empresa
 ) {
       public DadosAtualizacaoVeiculo (Veiculo veiculo) {
             this(
@@ -16,7 +16,8 @@ public record DadosAtualizacaoVeiculo(
                     veiculo.getNumeroPlaca(),
                     veiculo.getTipoVeiculo(),
                     veiculo.getStatus(),
-                    veiculo.getCor()
+                    veiculo.getCor(),
+                    veiculo.getEmpresa()
             );
       }
 }

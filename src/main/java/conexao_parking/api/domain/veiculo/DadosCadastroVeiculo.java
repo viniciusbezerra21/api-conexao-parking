@@ -19,7 +19,8 @@ public record DadosCadastroVeiculo(
         StatusVeiculo status,
         @NotNull
         @Embedded
-        DadosCadastroProprietario proprietario
-
+        DadosCadastroProprietario proprietario,
+        @NotBlank
+        String empresa
 ) {
 }
