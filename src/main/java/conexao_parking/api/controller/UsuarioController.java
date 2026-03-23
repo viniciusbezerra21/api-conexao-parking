@@ -96,6 +96,7 @@ public class UsuarioController {
     public ResponseEntity tornarAdmin(@PathVariable Long id) {
         var usuario = repository.getReferenceById(id);
         usuario.tornarAdmin();
+        repository.save(usuario);
         return ResponseEntity.noContent().build();
     }
 
