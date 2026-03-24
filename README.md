@@ -15,6 +15,15 @@ Esta é a API RESTful que alimenta o sistema **Conexão Parking**. Desenvolvida 
 * **Flyway**: Gerenciamento de migrações do banco de dados (Versionamento de Schema).
 * **Lombok**: Redução de código boilerplate para maior produtividade.
 * **SpringDoc OpenAPI (Swagger)**: Documentação automatizada e interativa dos endpoints.
+* **Railway**: Plataforma de Cloud Hosting para a API e Banco de Dados MySQL.
+* **Spring Profiles**: Configurações distintas para ambientes de `dev` (local) e `prod` (cloud).
+* **JWT (java-jwt)**: Implementação robusta de tokens para autenticação Stateless.
+---
+
+## 🌐 Deploy (Produção) | Live API
+
+A API está hospedada no Railway e integrada ao banco de dados MySQL gerenciado:
+👉 **[Conexão Parking API - Swagger Produção](https://api-conexao-parking.railway.app/swagger-ui/index.html)**
 
 ---
 
@@ -56,8 +65,22 @@ cd api-conexao-parking
 Compile e rode a aplicação:
 
 Bash
-./mvnw spring-boot:run
+# Para rodar com o perfil de desenvolvimento local:
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
+
+---
+
+### 🔑 Variáveis de Ambiente (Environment Variables)
+
+Para rodar o projeto, as seguintes variáveis devem estar configuradas no seu ambiente (IDE ou OS):
+
+| Variável | Descrição | Exemplo Local |
+| :--- | :--- | :--- |
+| `JWT_SECRET` | Chave para assinatura do Token | `sua_chave_secreta_32_chars` |
+| `MYSQL_URL` | URL de conexão com o Banco | `jdbc:mysql://localhost:3306/conexaoparking_api` |
+| `MYSQL_USER` | Usuário do MySQL | `root` |
+| `MYSQL_PASSWORD` | Senha do MySQL | `root` |
 
 ---
 
@@ -78,6 +101,10 @@ Com a aplicação rodando, você pode visualizar, testar e entender todos os end
 * **🛡️ Validação de Dados:** Uso de Bean Validation para garantir integridade nos inputs.
 
 * **📑 Migrações Automáticas:** O Flyway garante que a estrutura do banco esteja sempre sincronizada.
+
+* **🔐 Autenticação & Autorização:** Diferenciação de permissões entre `ROLE_USER` e `ROLE_ADMIN` via Security Filter.
+
+* **🚀 CORS Configuration:** Configuração ajustada para permitir requisições seguras do domínio da Vercel.
 
 ---
 
