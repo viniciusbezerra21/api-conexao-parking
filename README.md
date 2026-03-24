@@ -23,7 +23,7 @@ Esta é a API RESTful que alimenta o sistema **Conexão Parking**. Desenvolvida 
 ## 🌐 Deploy (Produção) | Live API
 
 A API está hospedada no Railway e integrada ao banco de dados MySQL gerenciado:
-👉 **[Conexão Parking API - Swagger Produção](https://api-conexao-parking.railway.app/swagger-ui/index.html)**
+👉 **[Conexão Parking API - Swagger Produção](https://api-conexao-parking-production-1b7e.up.railway.app/swagger-ui/index.html)**
 
 ---
 
