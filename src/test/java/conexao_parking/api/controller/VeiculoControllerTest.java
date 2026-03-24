@@ -1,4 +1,3 @@
-// language: java
 package conexao_parking.api.controller;
 
 import conexao_parking.api.domain.proprietario.Proprietario;
@@ -19,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -32,21 +32,21 @@ import static org.mockito.ArgumentMatchers.any;
 @ActiveProfiles("test")
 class VeiculoControllerTest {
 
-    @Autowired
     @MockitoBean
     private VeiculoService service;
 
-    @Autowired
     @MockitoBean
     private VeiculoRepository repository;
 
     @Autowired
-    @MockitoBean
     private VeiculoController controller;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
-        controller = new VeiculoController(service, repository);
+        Mockito.reset(service, repository);
     }
 
     @WithMockUser
@@ -142,17 +142,38 @@ class VeiculoControllerTest {
         assertTrue(resp.getBody().toString().contains("Veículo desbloqueado com sucesso"));
     }
 
-    @WithMockUser
-    @DisplayName("Verifica exclusão lógica do veículo e retorno 204 No Content")
     @Test
-    void excluir() {
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Deve permitir exclusão quando o usuário é ADMIN")
+    void excluirSucesso() throws Exception {
+
         var veiculo = Mockito.mock(Veiculo.class);
         Mockito.when(repository.getReferenceById(1L)).thenReturn(veiculo);
 
-        ResponseEntity<?> resp = controller.excluir(1L);
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                        .delete("/veiculo/1"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .status().isNoContent());
 
-        assertEquals(HttpStatus.NO_CONTENT, resp.getStatusCode());
+        // Verifica se o método de exclusão lógica foi mesmo chamado
+        Mockito.verify(veiculo).excluir();
     }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    @DisplayName("Deve barrar com 403 quando o usuário não é ADMIN")
+    void excluirBarrado() throws Exception {
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                        .delete("/veiculo/1"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .status().isForbidden());
+
+
+        Mockito.verifyNoInteractions(service);
+    }
+
+
+
 
     public record DadosListagemVeiculoDashboard(
             String nome,

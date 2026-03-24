@@ -1,5 +1,3 @@
-// language: java
-// src/test/java/conexao_parking/api/controller/UsuarioControllerTest.java
 package conexao_parking.api.controller;
 
 import conexao_parking.api.domain.usuario.*;
