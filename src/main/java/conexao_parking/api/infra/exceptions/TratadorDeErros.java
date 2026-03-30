@@ -2,6 +2,7 @@ package conexao_parking.api.infra.exceptions;
 
 import conexao_parking.api.domain.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -42,9 +43,26 @@ public class TratadorDeErros {
             );
         }
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity tratarErro409(DataIntegrityViolationException ex) {
+        String mensagem = "Erro de integridade de dados.";
+
+
+        if (ex.getMessage() != null && ex.getMessage().contains("Duplicate entry")) {
+
+            mensagem = "Já existe um registro com estes dados (CPF ou Placa) no sistema.";
+        }
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new DadosErroSimples(mensagem));
+    }
+
     public class VeiculoBloqueadoException extends RuntimeException {
         public VeiculoBloqueadoException() {
             super("Veículo bloqueado");
         }
     }
+
+    private record DadosErroSimples(String mensagem) {}
 }
+

@@ -57,6 +57,21 @@ class VeiculoControllerTest {
         Mockito.reset(service, repository);
     }
 
+    @Test
+    @WithMockUser
+    @DisplayName("Deve retornar 400 quando campos obrigatórios estão ausentes")
+    void cadastrar_campos_invalidos() throws Exception {
+
+        String jsonInvalido = "{}";
+
+        mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/veiculo")
+                                .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                                .content(jsonInvalido)
+                )
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isBadRequest());
+    }
+
     @WithMockUser
     @DisplayName("Verifica que ao cadastrar um veículo o controller responde com 201 e Location apontando para /veiculo/{id}")
     @Test
@@ -75,6 +90,25 @@ class VeiculoControllerTest {
         assertNotNull(resp.getHeaders().getLocation());
         assertTrue(resp.getHeaders().getLocation().toString().endsWith("/veiculo/1"));
         assertNotNull(resp.getBody());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Deve retornar 409 quando o Service lança DataIntegrityViolationException (Duplicidade)")
+    void cadastrar_erro_duplicidade() throws Exception {
+
+        Mockito.when(service.cadastrar(any()))
+                .thenThrow(new org.springframework.dao.DataIntegrityViolationException("Duplicate entry '140.101.969-20' for key 'cpf_proprietario'"));
+
+        var proprietario = new DadosCadastroProprietario("Dono", "14010196920");
+        var dados = new DadosCadastroVeiculo("ABC1D23", "Preto", true, TipoVeiculo.CARRO, StatusVeiculo.ATIVO, proprietario, "Empresa");
+
+        mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/veiculo")
+                                .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                                .content(jsonCadastroVeiculo.write(dados).getJson())
+                )
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isConflict());
     }
 
     @WithMockUser

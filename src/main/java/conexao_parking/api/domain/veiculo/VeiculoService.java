@@ -32,8 +32,11 @@ public class VeiculoService {
 
     @Transactional
     public Veiculo cadastrar(DadosCadastroVeiculo dados) {
-        var proprietario = new Proprietario(dados.proprietario());
-        proprietarioRepository.save(proprietario);
+        var proprietario = proprietarioRepository.findByCpfProprietario(dados.proprietario().cpfProprietario())
+                .orElseGet(() -> {
+                   var novoProprietario = new Proprietario(dados.proprietario());
+                   return proprietarioRepository.save(novoProprietario);
+                });
 
         var usuario = usuarioAutenticadoService.get();
 
@@ -43,7 +46,7 @@ public class VeiculoService {
         var cadastro = new Cadastro(usuario, veiculo, LocalDateTime.now());
         cadastroRepository.save(cadastro);
 
-        return veiculo;
+        return  veiculo;
     }
 
 
