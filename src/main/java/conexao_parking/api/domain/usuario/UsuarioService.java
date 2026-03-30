@@ -2,6 +2,7 @@ package conexao_parking.api.domain.usuario;
 
 import conexao_parking.api.domain.usuario.validador.ValidadorUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Usuario cadastrar(DadosCadastroUsuario dados) {
         validadoresSenha.forEach(v -> v.validar(dados.senha()));
         var senhaHash = passwordEncoder.encode(dados.senha());

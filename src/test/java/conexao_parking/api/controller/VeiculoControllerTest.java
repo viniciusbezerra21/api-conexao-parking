@@ -1,5 +1,6 @@
 package conexao_parking.api.controller;
 
+import conexao_parking.api.domain.proprietario.DadosCadastroProprietario;
 import conexao_parking.api.domain.proprietario.Proprietario;
 import conexao_parking.api.domain.veiculo.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,12 @@ class VeiculoControllerTest {
 
     @MockitoBean
     private VeiculoService service;
+
+    @Autowired
+    private JacksonTester<DadosCadastroVeiculo> jsonCadastroVeiculo;
+
+    @Autowired
+    private JacksonTester<DadosCadastroProprietario> jsonCadastroProprietario;
 
     @MockitoBean
     private VeiculoRepository repository;
@@ -241,6 +249,44 @@ class VeiculoControllerTest {
         Mockito.when(veiculo.getIdVeiculo()).thenReturn(1L);
 
         return veiculo;
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Deve retornar 400 ao tentar enviar HTML/Script no campo cor (Anti-XSS)")
+    void cadastrar_cenario_xss() throws Exception {
+        var proprietario = new DadosCadastroProprietario("Dono Teste", "12345678909"); // CPF fake para este teste
+        var dadosMaliciosos = new DadosCadastroVeiculo(
+                "ABC1234",
+                "<script>alert('xss')</script>", // Tenta injetar script
+                true,
+                TipoVeiculo.CARRO,
+                StatusVeiculo.ATIVO,
+                proprietario,
+                "Empresa"
+        );
+
+        mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/veiculo")
+                                .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                                .content(jsonCadastroVeiculo.write(dadosMaliciosos).getJson())
+                )
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Deve retornar 400 quando o CPF do proprietário é numericamente inválido")
+    void cadastrar_cpf_invalido() throws Exception {
+        var proprietarioInvalido = new DadosCadastroProprietario("Dono", "11111111111"); // CPF de números repetidos é inválido
+        var dados = new DadosCadastroVeiculo("ABC1234", "Preto", true, TipoVeiculo.CARRO, StatusVeiculo.ATIVO, proprietarioInvalido, "Empresa");
+
+        mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/veiculo")
+                                .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                                .content(jsonCadastroVeiculo.write(dados).getJson())
+                )
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isBadRequest());
     }
 
 }

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @Table(name = "veiculo")
 @Entity(name = "Veiculo")
@@ -68,6 +69,7 @@ public class Veiculo {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void excluir() {
         this.excluido = true;
     }

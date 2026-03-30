@@ -32,8 +32,10 @@ public class UsuarioController {
         this.service = service;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/cadastro")
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {
         var usuario = service.cadastrar(dados);
 

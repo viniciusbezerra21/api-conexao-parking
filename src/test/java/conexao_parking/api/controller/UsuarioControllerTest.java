@@ -10,27 +10,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-        import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 @ActiveProfiles("test")
 class UsuarioControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private JacksonTester<DadosCadastroUsuario> jsonCadastro;
 
     @Autowired
     @MockitoBean
@@ -66,9 +77,24 @@ class UsuarioControllerTest {
         return usuario;
     }
 
-    @WithMockUser
+
+    @DisplayName("Deve retornar 403 Forbidden para cadastro sem role ADMIN")
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void cadastrar_semAdmin() throws Exception {
+        var dados = new DadosCadastroUsuario("usuario@empresa.com", "senha123");
+
+        mockMvc.perform(
+                        post("/usuario/cadastro")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonCadastro.write(dados).getJson())
+                )
+                .andExpect(status().isForbidden());
+    }
+
     @DisplayName("Verifica que ao cadastrar um usuário o controller responde com 201 e Location apontando para /usuario/{id}")
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void cadastrar() {
         var usuario = createUsuarioMock();
         var dados = Mockito.mock(DadosCadastroUsuario.class);
