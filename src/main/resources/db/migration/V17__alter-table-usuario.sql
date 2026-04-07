@@ -1,0 +1,3 @@
+ALTER TABLE usuario
+    ADD COLUMN precisa_trocar_senha BOOLEAN NOT NULL DEFAULT TRUE;
+

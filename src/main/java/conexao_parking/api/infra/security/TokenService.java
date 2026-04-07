@@ -29,6 +29,7 @@ public class TokenService {
                     .withSubject(usuario.getEmailCorporativo())
                     .withClaim("id", usuario.getIdUsuario())
                     .withClaim("role", usuario.getRole().name())
+                    .withClaim("precisaTrocarSenha", usuario.isPrecisaTrocarSenha())
                     .withExpiresAt(dataExpiracao())
                     .sign(algoritmo);
         } catch (JWTCreationException exception) {
@@ -51,7 +52,7 @@ public class TokenService {
     }
 
     private Instant dataExpiracao() {
-        return LocalDateTime.now().plusHours(16).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(10).toInstant(ZoneOffset.of("-03:00"));
     }
 
 }

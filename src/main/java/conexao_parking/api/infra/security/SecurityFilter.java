@@ -1,5 +1,6 @@
 package conexao_parking.api.infra.security;
 
+import conexao_parking.api.domain.usuario.Usuario;
 import conexao_parking.api.domain.usuario.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,9 +35,16 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (tokenJWT != null) {
             var subject = tokenService.getSubject(tokenJWT);
-            var usuario = repository.findByEmailCorporativo(subject);
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+            var usuario = (Usuario) repository.findByEmailCorporativo(subject);
 
+            if (usuario.isPrecisaTrocarSenha() && !request.getRequestURI().contains("/usuario/" + usuario.getIdUsuario())) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("Acesso negado: é necessário trocar a senha antes de acessar outros recursos.");
+                return;
+            }
+
+            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

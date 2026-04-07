@@ -24,23 +24,30 @@ public class UsuarioService {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Usuario cadastrar(DadosCadastroUsuario dados) {
-        validadoresSenha.forEach(v -> v.validar(dados.senha()));
-        var senhaHash = passwordEncoder.encode(dados.senha());
-        var usuario = new Usuario(dados, senhaHash,Role.ROLE_USER);
+        String senhaPadrao = "Conexao@123";
+        var senhaHash = passwordEncoder.encode(senhaPadrao);
+        var usuario = new Usuario(dados, senhaHash, Role.ROLE_USER);
+        usuario.setPrecisaTrocarSenha(true);
+
         return repository.save(usuario);
     }
 
     public Usuario atualizar(Long idUsuario, DadosAtualizacaoUsuario dados, Usuario usuarioLogado) {
         var usuario = repository.getReferenceById(idUsuario);
 
-        if (usuarioLogado.getRole() == Role.ROLE_ADMIN) {
-            if (dados.emailCorporativo() != null) {
-                usuario.setEmailCorporativo(dados.emailCorporativo());
-            }
-            if (dados.novaSenha() != null && !dados.novaSenha().isBlank()) {
-                validadoresSenha.forEach(v -> v.validar(dados.novaSenha()));
-                usuario.setSenha(passwordEncoder.encode(dados.novaSenha()));
-            }
+        if (!usuario.equals(usuarioLogado) && usuarioLogado.getRole() != Role.ROLE_ADMIN) {
+            throw new RuntimeException("Acesso negado: apenas o próprio usuário ou um administrador pode atualizar os dados.");
+        }
+
+        if (dados.emailCorporativo() != null) {
+            usuario.setEmailCorporativo(dados.emailCorporativo());
+        }
+
+        if (dados.novaSenha() != null && !dados.novaSenha().isBlank()) {
+            validadoresSenha.forEach(v -> v.validar(dados.novaSenha()));
+            usuario.setSenha(passwordEncoder.encode(dados.novaSenha()));
+
+            usuario.setPrecisaTrocarSenha(false);
         }
 
         return usuario;

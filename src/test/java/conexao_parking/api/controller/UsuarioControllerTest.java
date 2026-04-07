@@ -29,7 +29,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -42,6 +43,9 @@ class UsuarioControllerTest {
 
     @Autowired
     private JacksonTester<DadosCadastroUsuario> jsonCadastro;
+
+    @Autowired
+    private JacksonTester<DadosAtualizacaoUsuario> jsonAtualizacao;
 
     @Autowired
     @MockitoBean
@@ -60,7 +64,7 @@ class UsuarioControllerTest {
     @BeforeEach
     void setUp() throws Exception {
         controller = new UsuarioController(service);
-        // injeta repository e tokenService via reflection (campos privados autowired no controller)
+
         Field repoField = UsuarioController.class.getDeclaredField("repository");
         repoField.setAccessible(true);
         repoField.set(controller, repository);
@@ -82,7 +86,8 @@ class UsuarioControllerTest {
     @Test
     @WithMockUser(roles = {"USER"})
     void cadastrar_semAdmin() throws Exception {
-        var dados = new DadosCadastroUsuario("usuario@empresa.com", "senha123");
+        // O DTO agora só recebe o e-mail no construtor (ou via Record)
+        var dados = new DadosCadastroUsuario("usuario@empresa.com");
 
         mockMvc.perform(
                         post("/usuario/cadastro")
@@ -92,24 +97,28 @@ class UsuarioControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-    @DisplayName("Verifica que ao cadastrar um usuário o controller responde com 201 e Location apontando para /usuario/{id}")
+    @DisplayName("Verifica que ao cadastrar um usuário o controller responde com 201 e retorna o Token")
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void cadastrar() {
-        var usuario = createUsuarioMock();
-        var dados = Mockito.mock(DadosCadastroUsuario.class);
+    void cadastrar() throws Exception {
 
-        Mockito.when(service.cadastrar(any())).thenReturn(usuario);
-        Mockito.when(tokenService.gerarToken(usuario)).thenReturn("token-jwt");
+        var dados = new DadosCadastroUsuario("novo.usuario@empresa.com");
+        var usuario = createUsuarioMock(); // ID 1, email "usuario@empresa.com"
 
-        var uriBuilder = UriComponentsBuilder.fromUriString("http://localhost");
 
-        ResponseEntity<?> resp = controller.cadastrar(dados, uriBuilder);
+        Mockito.when(service.cadastrar(any(DadosCadastroUsuario.class))).thenReturn(usuario);
+        Mockito.when(tokenService.gerarToken(any(Usuario.class))).thenReturn("token-jwt-gerado");
 
-        assertEquals(HttpStatus.CREATED, resp.getStatusCode());
-        assertNotNull(resp.getHeaders().getLocation());
-        assertTrue(resp.getHeaders().getLocation().toString().endsWith("/usuario/1"));
-        assertNotNull(resp.getBody());
+
+        mockMvc.perform(
+                        post("/usuario/cadastro")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonCadastro.write(dados).getJson())
+                )
+                .andExpect(status().isCreated()) // Espera 201
+                .andExpect(header().string("Location", "http://localhost/usuario/1")) // Valida a URI
+                .andExpect(jsonPath("$.token").value("token-jwt-gerado")) // Valida se o token veio no corpo
+                .andExpect(jsonPath("$.usuario.idUsuario").value(1)); // Valida dados do usuário no corpo
     }
 
     @WithMockUser
@@ -141,6 +150,55 @@ class UsuarioControllerTest {
         assertEquals(HttpStatus.OK, resp.getStatusCode());
         assertNotNull(resp.getBody());
     }
+
+    @Test
+    @DisplayName("Deve resetar a senha para o padrão e retornar 200 OK")
+    @WithMockUser(roles = {"ADMIN"})
+    void resetarSenhaCenario1() throws Exception {
+
+        var usuario = createUsuarioMock();
+        Mockito.when(repository.getReferenceById(1L)).thenReturn(usuario);
+
+
+        mockMvc.perform(put("/usuario/1/resetar-senha"))
+                .andExpect(status().isOk());
+
+        Mockito.verify(usuario).setSenha(any());
+        Mockito.verify(usuario).setPrecisaTrocarSenha(true);
+    }
+
+    @Test
+    @DisplayName("Deve retornar 403 ao tentar resetar senha sem ser ADMIN")
+    @WithMockUser(roles = {"USER"})
+    void resetarSenhaCenario2() throws Exception {
+        mockMvc.perform(put("/usuario/1/resetar-senha"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Verifica atualização com nova senha e retorno do DTO correto")
+    @WithMockUser
+    void atualizarComSenha() throws Exception {
+
+        Long id = 1L;
+
+        var dados = new DadosAtualizacaoUsuario(id, "novo@email.com", "NovaSenha123");
+        var usuarioLogado = createUsuarioMock();
+        var usuarioAtualizado = createUsuarioMock();
+
+        Mockito.when(usuarioAtualizado.getIdUsuario()).thenReturn(id);
+        Mockito.when(usuarioAtualizado.getEmailCorporativo()).thenReturn("novo@email.com");
+        Mockito.when(service.atualizar(any(), any(), any())).thenReturn(usuarioAtualizado);
+
+
+        mockMvc.perform(
+                        put("/usuario/" + id) // Verifique se o path é este mesmo
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonAtualizacao.write(dados).getJson())
+                )
+                .andExpect(status().isOk());
+    }
+
 
     @WithMockUser
     @DisplayName("Verifica atualização chamando service.atualizar e retornando 200")
@@ -180,6 +238,52 @@ class UsuarioControllerTest {
         ResponseEntity<?> resp = controller.tornarAdmin(1L);
 
         assertEquals(HttpStatus.NO_CONTENT, resp.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Deve alterar role para USER e retornar 204 No Content quando logado como ADMIN")
+    @WithMockUser(roles = {"ADMIN"})
+    void tornarUsuarioCenario1() throws Exception {
+        // ARRANGE
+        Long id = 1L;
+        var usuario = createUsuarioMock();
+        Mockito.when(repository.getReferenceById(id)).thenReturn(usuario);
+
+        // ACT & ASSERT
+        mockMvc.perform(put("/usuario/{id}/tornar-usuario", id))
+                .andExpect(status().isNoContent());
+
+        // Verificações
+        Mockito.verify(usuario, Mockito.times(1)).tornarUsuario();
+        Mockito.verify(repository, Mockito.times(1)).save(usuario);
+    }
+
+    @Test
+    @DisplayName("Deve retornar 403 Forbidden ao tentar tornar usuário comum sem role ADMIN")
+    @WithMockUser(roles = {"USER"})
+    void tornarUsuarioCenario2() throws Exception {
+        // ACT & ASSERT
+        mockMvc.perform(put("/usuario/1/tornar-usuario"))
+                .andExpect(status().isForbidden());
+
+        // Garante que nem buscou no banco
+        Mockito.verify(repository, Mockito.never()).getReferenceById(any());
+    }
+
+    @WithMockUser
+    @DisplayName("Verifica tornarUsuario chamando o método da entidade e retornando 204 (Teste de Unidade)")
+    @Test
+    void tornarUsuarioUnidade() {
+        // ARRANGE
+        var usuario = createUsuarioMock();
+        Mockito.when(repository.getReferenceById(1L)).thenReturn(usuario);
+
+        // ACT
+        ResponseEntity<?> resp = controller.tornarUsuario(1L);
+
+        // ASSERT
+        assertEquals(HttpStatus.NO_CONTENT, resp.getStatusCode());
+        Mockito.verify(usuario).tornarUsuario();
     }
 
     @WithMockUser

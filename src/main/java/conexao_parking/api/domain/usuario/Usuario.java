@@ -1,5 +1,6 @@
 package conexao_parking.api.domain.usuario;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id_usuario")
+@EqualsAndHashCode(of = "idUsuario")
 public class Usuario implements UserDetails {
 
     @Id
@@ -26,7 +27,12 @@ public class Usuario implements UserDetails {
     @Column(name = "email_corporativo")
     private String emailCorporativo;
 
+    @Column(name = "precisa_trocar_senha")
+    private boolean precisaTrocarSenha;
+
+    @JsonIgnore
     private String senha;
+
     private Boolean ativo;
 
     @Enumerated(EnumType.STRING)
@@ -73,6 +79,7 @@ public class Usuario implements UserDetails {
         this.senha = senhaHash;
         this.ativo = true;
         this.role = role;
+        this.precisaTrocarSenha = true;
     }
 
 
@@ -88,6 +95,9 @@ public class Usuario implements UserDetails {
         this.role = Role.ROLE_ADMIN;
     }
 
+    public void tornarUsuario() {
+        this.role = Role.ROLE_USER;
+    }
 
     public void excluir() {
         this.ativo = false;

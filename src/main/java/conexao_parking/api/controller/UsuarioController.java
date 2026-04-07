@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,6 +28,8 @@ public class UsuarioController {
 
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UsuarioController(UsuarioService service) {
         this.service = service;
@@ -36,8 +39,9 @@ public class UsuarioController {
     @PostMapping("/cadastro")
     @Transactional
     @SecurityRequirement(name = "bearer-key")
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {// 1. A Service cria o usuário com senha "Conexao@123" e precisaTrocarSenha = true
         var usuario = service.cadastrar(dados);
+
 
         var uri = uriBuilder.path("/usuario/{id}")
                 .buildAndExpand(usuario.getIdUsuario())
@@ -45,10 +49,11 @@ public class UsuarioController {
 
         var tokenJWT = tokenService.gerarToken(usuario);
 
-        return ResponseEntity.created(uri).body(new DadosCadastroResponse
-                (new DadosDetalhamentoUsuario(usuario), tokenJWT));
+        return ResponseEntity.created(uri).body(new DadosCadastroResponse(
+                new DadosDetalhamentoUsuario(usuario),
+                tokenJWT
+        ));
     }
-
     @GetMapping("/check-email")
     public ResponseEntity<Boolean> verificarEmailDisponivel(@RequestParam String emailCorporativo) {
         boolean emailDisponivel = service.emailDisponivel(emailCorporativo);
@@ -71,8 +76,6 @@ public class UsuarioController {
     }
 
 
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     @Transactional
     @SecurityRequirement(name = "bearer-key")
@@ -93,13 +96,38 @@ public class UsuarioController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/usuario/{id}/tornar-admin")
+    @PutMapping("/{id}/tornar-admin")
+    @Transactional
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity tornarAdmin(@PathVariable Long id) {
         var usuario = repository.getReferenceById(id);
         usuario.tornarAdmin();
         repository.save(usuario);
         return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{id}/tornar-usuario")
+    @Transactional
+    @SecurityRequirement(name = "bearer-key")
+    public ResponseEntity tornarUsuario(@PathVariable Long id) {
+        var usuario = repository.getReferenceById(id);
+        usuario.tornarUsuario();
+        repository.save(usuario);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{id}/resetar-senha")
+    @Transactional
+    @SecurityRequirement(name = "bearer-key")
+    public ResponseEntity resetarSenha(@PathVariable Long id) {
+        var usuario = repository.getReferenceById(id);
+
+        usuario.setSenha(passwordEncoder.encode("Conexao@123"));
+        usuario.setPrecisaTrocarSenha(true);
+
+        return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
     }
 
 }
